@@ -24,4 +24,13 @@ public class Book {
         this.isIssued = false;
         this.price = price;
     }
+
+    public Book(Integer id, String title, String author, String genre, Boolean isIssued, Double price) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+        this.isIssued = isIssued;
+        this.price = price;
+    }
 }

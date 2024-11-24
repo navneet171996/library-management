@@ -12,12 +12,8 @@ public class MemberServices {
     Scanner scanner = new Scanner(System.in);
     Map<Integer, Book> bookCatalog = new HashMap<>();
 
-    public void searchBooks() {
+    public void searchBooks(String query) {
         try {
-            System.out.print("Enter keyword to search (Title/Author): ");
-            scanner.nextLine(); // consume newline
-            String query = scanner.nextLine().toLowerCase();
-
             boolean found = false;
             for (Book book : bookCatalog.values()) {
                 if (book.getTitle().toLowerCase().contains(query) || book.getAuthor().toLowerCase().contains(query)) {
@@ -35,11 +31,8 @@ public class MemberServices {
         }
     }
 
-    public void issueBook(Member member) {
+    public void issueBook(Member member, int id) {
         try {
-            System.out.print("Enter Book ID to issue: ");
-            int id = scanner.nextInt();
-
             if (bookCatalog.containsKey(id)) {
                 Book book = bookCatalog.get(id);
 
@@ -62,11 +55,8 @@ public class MemberServices {
         }
     }
 
-    public void returnBook(Member member) {
+    public void returnBook(Member member, int id) {
         try {
-            System.out.print("Enter Book ID to return: ");
-            int id = scanner.nextInt();
-
             if (bookCatalog.containsKey(id)) {
                 Book book = bookCatalog.get(id);
 

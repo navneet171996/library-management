@@ -2,23 +2,17 @@ package org.iiitb.database;
 
 import org.iiitb.entities.Book;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseServices {
 
-    public void connectToDatabase(){
-        String url = "jdbc:mysql://localhost:3306/libraryManagement";
-        String username = "root";
-        String password = "Priyam123";
-    }
+    private String url = "jdbc:mysql://localhost:3306/libraryManagement";
+    private String username = "root";
+    private String password = "Priyam123";
 
     public void addBookToDatabase(Book book){
-        String url = "jdbc:mysql://localhost:3306/libraryManagement";
-        String username = "root";
-        String password = "Priyam123";
 
         try(Connection connection = DriverManager.getConnection(url, username, password)){
             String query = "INSERT INTO Book (id, title, author, genre, isIssued, price) VALUES (?, ?, ?, ?, ?, ?)";
@@ -37,13 +31,41 @@ public class DatabaseServices {
                 int rowsAffected = preparedStatement.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    System.out.println("Book added successfully!");
+                    System.out.println("DB: Book added successfully!");
                 } else {
-                    System.out.println("Failed to add the book.");
+                    System.out.println("DB: Failed to add the book.");
                 }
 
     } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public List<Book> getAllBooksFromDatabase(){
+        try(Connection connection = DriverManager.getConnection(url, username, password)) {
+            List<Book> books = new ArrayList<>();
+            String query = "SELECT id, title, author, genre, isIssued, price FROM book";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Book book = new Book(
+                        resultSet.getInt("id"),
+                        resultSet.getString("title"),
+                        resultSet.getString("author"),
+                        resultSet.getString("genre"),
+                        resultSet.getBoolean("isIssued"),
+                        resultSet.getDouble("price")
+                );
+                books.add(book);
+            }
+
+
+            return books;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 }

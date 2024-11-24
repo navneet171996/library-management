@@ -1,5 +1,6 @@
 package org.iiitb.services;
 
+import org.iiitb.database.DatabaseServices;
 import org.iiitb.entities.Book;
 import org.iiitb.entities.Member;
 
@@ -9,43 +10,63 @@ import java.util.*;
 public class AdminServices {
 
     Scanner scanner = new Scanner(System.in);
-    Map<Integer, Book> bookCatalog = new HashMap<>();
+    Map<Integer, Book> bookCatalog;
     Map<Integer, Member> members = new HashMap<>();
 
     private MemberServices memberServices = new MemberServices();
+    private DatabaseServices databaseServices;
 
-    public void addBook() {
+    public AdminServices(){
+        databaseServices = new DatabaseServices();
+        bookCatalog = new HashMap<>();
+        refreshBookCatalog();
+
+    }
+
+    private void refreshBookCatalog(){
+        bookCatalog = new HashMap<>();
+        List<Book> allBooksFromDatabase = databaseServices.getAllBooksFromDatabase();
+        allBooksFromDatabase.forEach(book -> {
+            bookCatalog.put(book.getId(), book);
+        });
+    }
+
+    private double checkFineForMember(int memberId) {
+        Member member = members.get(memberId);
+        double totalFine = 0;
+        if (member != null) {
+            for (String bookTitle : member.getIssuedBooks()) {
+                // Simulate fine calculation logic
+                totalFine += 2.5; // Assuming $2.5 fine per book
+            }
+        }
+        return totalFine;
+    }
+
+    ///////////////////////////To-do
+    private boolean isBookIssuedRecently(Book book) {
+        // Placeholder for recent issuance logic
+        return Math.random() > 0.7; // Randomly simulate recent issuance
+    }
+
+    public void addBook(Book book) {
         try {
-            System.out.print("Enter Book ID: ");
-            int id = scanner.nextInt();
-            scanner.nextLine();
-            System.out.print("Enter Title: ");
-            String title = scanner.nextLine();
-            System.out.print("Enter Author: ");
-            String author = scanner.nextLine();
-            System.out.print("Enter Genre: ");
-            String genre = scanner.nextLine();
-            System.out.print("Enter Price: ");
-            double price = scanner.nextDouble();
-
-            if (bookCatalog.containsKey(id)) {
-                System.out.println("Error: A book with this ID already exists.");
-            } else if (title.isEmpty() || author.isEmpty() || genre.isEmpty()) {
-                System.out.println("Error: All fields are required!");
+            if (bookCatalog.containsKey(book.getId())) {
+                System.out.println("AS: Error: A book with this ID already exists.");
+            } else if (book.getTitle().isEmpty() || book.getAuthor().isEmpty() || book.getGenre().isEmpty()) {
+                System.out.println("AS: Error: All fields are required!");
             } else {
-                bookCatalog.put(id, new Book(id, title, author, genre, price));
-                System.out.println("Book added successfully!");
+                databaseServices.addBookToDatabase(book);
+                refreshBookCatalog();
+                System.out.println("AS: Book added successfully!");
             }
         } catch (Exception e) {
-            System.out.println("Error adding book: " + e.getMessage());
+            System.out.println("AS: Error adding book: " + e.getMessage());
         }
     }
 
-    public void deleteBook() {
+    public void deleteBook(int id) {
         try {
-            System.out.print("Enter Book ID to delete: ");
-            int id = scanner.nextInt();
-
             if (bookCatalog.containsKey(id)) {
                 Book book = bookCatalog.get(id);
 
@@ -113,24 +134,6 @@ public class AdminServices {
         }
     }
 
-    public void calculateIssuedBooksPercentage() {
-        try {
-            int totalBooks = bookCatalog.size();
-            int issuedBooks = 0;
-
-            for (Book book : bookCatalog.values()) {
-                if (book.getIsIssued()) {
-                    issuedBooks++;
-                }
-            }
-
-            double percentage = ((double) issuedBooks / totalBooks) * 100;
-            System.out.println("Percentage of issued books: " + percentage + "%");
-        } catch (Exception e) {
-            System.out.println("Error calculating issued books percentage: " + e.getMessage());
-        }
-    }
-
     public void calculateMostPopularBook() {
         try {
             Book mostPopularBook = null;
@@ -183,66 +186,6 @@ public class AdminServices {
         }
     }
 
-    public void calculateAverageBooksIssued() {
-        try {
-            if (members.isEmpty()) {
-                System.out.println("No members found.");
-                return;
-            }
-
-            int totalIssuedBooks = 0;
-            for (Member member : members.values()) {
-                totalIssuedBooks += member.getIssuedBooks().size();
-            }
-
-            double averageBooksIssued = (double) totalIssuedBooks / members.size();
-            System.out.println("Average number of books issued per member: " + averageBooksIssued);
-        } catch (Exception e) {
-            System.out.println("Error calculating average books issued: " + e.getMessage());
-        }
-    }
-
-    public void findMemberWithMostIssuedBooks() {
-        try {
-            Member topMember = null;
-            int maxBooksIssued = 0;
-
-            for (Member member : members.values()) {
-                if (member.getIssuedBooks().size() > maxBooksIssued) {
-                    topMember = member;
-                    maxBooksIssued = member.getIssuedBooks().size();
-                }
-            }
-
-            if (topMember != null) {
-                System.out.println("Member with most books issued: " + topMember.getName() + " with " + maxBooksIssued + " books.");
-            } else {
-                System.out.println("No books have been issued yet.");
-            }
-        } catch (Exception e) {
-            System.out.println("Error finding member with most issued books: " + e.getMessage());
-        }
-    }
-
-    public void calculateAverageBookPrice() {
-        try {
-            if (bookCatalog.isEmpty()) {
-                System.out.println("No books in the catalog.");
-                return;
-            }
-
-            double totalPrice = 0;
-            for (Book book : bookCatalog.values()) {
-                totalPrice += book.getPrice();
-            }
-
-            double averagePrice = totalPrice / bookCatalog.size();
-            System.out.println("Average price of books in the catalog: $" + averagePrice);
-        } catch (Exception e) {
-            System.out.println("Error calculating average book price: " + e.getMessage());
-        }
-    }
-
     public void getBookDetailsById(int id) {
         Book book = bookCatalog.get(id);
         if (book != null) {
@@ -292,18 +235,6 @@ public class AdminServices {
         }
         System.out.println("Unable to extend return date. Book not issued by this member.");
         return false;
-    }
-
-    public double checkFineForMember(int memberId) {
-        Member member = members.get(memberId);
-        double totalFine = 0;
-        if (member != null) {
-            for (String bookTitle : member.getIssuedBooks()) {
-                // Simulate fine calculation logic
-                totalFine += 2.5; // Assuming $2.5 fine per book
-            }
-        }
-        return totalFine;
     }
 
     public int calculateTotalBooksIssuedByGenre(String genre) {
@@ -580,6 +511,7 @@ public class AdminServices {
         }
     }
 
+    /////////////////////////////////To-Do
     public void showTopRatedBooks() {
         System.out.println("Top Rated Books (Dummy Data):");
         System.out.println("1. The Great Gatsby - 4.8/5");
@@ -587,6 +519,7 @@ public class AdminServices {
         System.out.println("3. 1984 - 4.6/5");
     }
 
+    /////////////////////////////////To-Do
     public void trackDailyTransactions(Date date) {
         System.out.println("Transactions on " + date + ":");
         System.out.println("Issued: 10 books (Dummy Data)");
@@ -700,11 +633,6 @@ public class AdminServices {
         }
     }
 
-    public boolean isBookIssuedRecently(Book book) {
-        // Placeholder for recent issuance logic
-        return Math.random() > 0.7; // Randomly simulate recent issuance
-    }
-
     public void generateDetailedGenreReport() {
         Map<String, List<String>> genreToBooks = new HashMap<>();
         for (Book book : bookCatalog.values()) {
@@ -718,6 +646,7 @@ public class AdminServices {
         }
     }
 
+    //////////////////////////////////////////////To-do
     public void simulateLibraryDay() {
         System.out.println("Simulating a Day in the Library...");
         for (int i = 0; i < 10; i++) {
@@ -726,8 +655,9 @@ public class AdminServices {
                 Member member = members.get(randomMemberId);
                 int action = (int) (Math.random() * 3) + 1;
                 switch (action) {
-                    case 1 -> memberServices.issueBook(member);
-                    case 2 -> memberServices.returnBook(member);
+                    /////////////////////////////////////////Correct it
+                    case 1 -> memberServices.issueBook(member, 0);
+                    case 2 -> memberServices.returnBook(member, 0);
                     case 3 -> recommendBooksBasedOnGenre(member);
                 }
             }

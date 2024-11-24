@@ -1,5 +1,6 @@
 package org.iiitb.menu;
 
+import org.iiitb.controller.AdminController;
 import org.iiitb.entities.Member;
 import org.iiitb.services.AdminServices;
 
@@ -12,6 +13,7 @@ public class AdminMenu {
 
     Scanner scanner = new Scanner(System.in);
     AdminServices adminServices = new AdminServices();
+    AdminController adminController = new AdminController();
     Map<Integer, Member> members = new HashMap<>();
 
     public void viewAdminMenu() {
@@ -72,107 +74,70 @@ public class AdminMenu {
 
                 switch (choice) {
                     case 1:
-                        adminServices.addBook();
+                        adminController.addBook();
                         break;
                     case 2:
-                        adminServices.deleteBook();
+                        adminController.deleteBook();
                         break;
                     case 3:
-                        adminServices.viewAllBooks();
+                        adminController.viewAllBooks();
                         break;
                     case 4:
-                        adminServices.calculateTotalBooks();
+                        adminController.calculateTotalBooks();
                         break;
                     case 5:
-                        adminServices.calculateTotalLibraryValue();
+                        adminController.calculateTotalLibraryValue();
                         break;
                     case 6:
-                        adminServices.calculateTotalIssuedBooks();
-                        break;
-                    case 7:
-                        adminServices.calculateIssuedBooksPercentage();
+                        adminController.calculateTotalIssuedBooks();
                         break;
                     case 8:
-                        adminServices.calculateMostPopularBook();
+                        adminController.calculateMostPopularBook();
                         break;
                     case 9:
-                        adminServices.calculateTotalFines();
-                        break;
-                    case 10:
-                        adminServices.calculateAverageBooksIssued();
-                        break;
-                    case 11:
-                        adminServices.findMemberWithMostIssuedBooks();
+                        adminController.calculateTotalFines();
                         break;
                     case 13:
-                        adminServices.categorizeBooksByGenre();
+                        adminController.categorizeBooksByGenre();
                         break;
                     case 14:
-                        adminServices.listMembersWithMultipleOverdueBooks();
+                        adminController.listMembersWithMultipleOverdueBooks();
                         break;
                     case 15:
-                        adminServices.viewTopGenres();
+                        adminController.viewTopGenres();
                         break;
                     case 16:
-                        adminServices.trackInactiveBooks();
+                        adminController.trackInactiveBooks();
                         break;
                     case 17:
-                        adminServices.generateDetailedGenreReport();
+                        adminController.generateDetailedGenreReport();
                         break;
                     case 18:
-                        adminServices.simulateLibraryDay();
-                        break;
-                    case 22:
-                        adminServices.calculateAverageBookPrice();
+                        adminController.simulateLibraryDay();
                         break;
                     case 23:
-                        System.out.print("Enter Book ID: ");
-                        int bookId = scanner.nextInt();
-                        adminServices.getBookDetailsById(bookId);
+                        adminController.getBookDetailsById();
                         break;
                     case 24:
-                        System.out.print("Enter Genre: ");
-                        scanner.nextLine(); // Consume newline
-                        String genre = scanner.nextLine();
-                        adminServices.findBooksByGenre(genre);
+                        adminController.findBooksByGenre();
                         break;
                     case 25:
-                        System.out.print("Enter Member ID: ");
-                        int memberId = scanner.nextInt();
-                        adminServices.getBooksIssuedByMember(memberId);
+                        adminController.getBooksIssuedByMember();
                         break;
                     case 26:
-                        System.out.print("Enter Book ID: ");
-                        bookId = scanner.nextInt();
-                        boolean available = adminServices.checkBookAvailability(bookId);
-                        System.out.println("Book availability: " + (available ? "Available" : "Issued"));
+                        adminController.checkBookAvailability();
                         break;
                     case 27:
-                        System.out.print("Enter Book ID: ");
-                        bookId = scanner.nextInt();
-                        System.out.print("Enter Member ID: ");
-                        memberId = scanner.nextInt();
-                        adminServices.extendBookReturnDate(bookId, memberId);
+                        adminController.extendBookReturnDate();
                         break;
                     case 28:
-                        System.out.print("Enter Genre: ");
-                        genre = scanner.nextLine();
-                        int totalBooksIssued = adminServices.calculateTotalBooksIssuedByGenre(genre);
-                        System.out.println("Total books issued in genre '" + genre + "': " + totalBooksIssued);
+                        adminController.calculateTotalBooksIssuedByGenre();
                         break;
                     case 29:
-                        System.out.print("Enter Book ID: ");
-                        bookId = scanner.nextInt();
-                        System.out.print("Enter New Price: ");
-                        double newPrice = scanner.nextDouble();
-                        adminServices.updateBookPrice(bookId, newPrice);
-                        System.out.println("Book price updated successfully.");
+                        adminController.updateBookPrice();
                         break;
                     case 30:
-                        System.out.print("Enter Author Name: ");
-                        scanner.nextLine(); // Consume newline
-                        String author = scanner.nextLine();
-                        adminServices.findBooksByAuthor(author);
+                        adminController.findBooksByAuthor();
                         break;
                     case 31:
                         Member mostIssuedMember = adminServices.findMostIssuedMember();
@@ -202,7 +167,7 @@ public class AdminMenu {
                         break;
                     case 35:
                         System.out.print("Enter Member ID: ");
-                        memberId = scanner.nextInt();
+                        int memberId = scanner.nextInt();
                         adminServices.recommendBooks(memberId);
                         break;
                     case 36:
@@ -222,63 +187,43 @@ public class AdminMenu {
                         adminServices.trackBooksIssuedInDateRange(startDate, endDate);
                         break;
                     case 40:
-                        adminServices.calculateGenrePopularity();
+                        adminController.calculateGenrePopularity();
                         break;
                     case 41:
-                        adminServices.trackOverdueBooks();
+                        adminController.trackOverdueBooks();
                         break;
                     case 42:
-                        adminServices.viewGenreBasedBooks();
+                        adminController.viewGenreBasedBooks();
                         break;
                     case 43:
-                        adminServices.calculateAverageBorrowTime();
+                        adminController.calculateAverageBorrowTime();
                         break;
                     case 44:
-                        adminServices.suggestBooksToRestock();
+                        adminController.suggestBooksToRestock();
                         break;
                     case 45:
-                        adminServices.findInactiveMembers();
+                        adminController.findInactiveMembers();
                         break;
                     case 46:
-                        System.out.print("Enter Book ID: ");
-                        int bookHistoryId = scanner.nextInt();
-                        adminServices.viewBookIssueHistory(bookHistoryId);
+                        adminController.viewBookIssueHistory();
                         break;
                     case 47:
-                        adminServices.predictBookDemand();
+                        adminController.predictBookDemand();
                         break;
                     case 48:
-                        System.out.print("Enter Member ID: ");
-                        int ratingMemberId = scanner.nextInt();
-                        System.out.print("Enter Book ID: ");
-                        int ratingBookId = scanner.nextInt();
-                        System.out.print("Enter Rating (1-5): ");
-                        int rating = scanner.nextInt();
-                        adminServices.addBookRatings(ratingMemberId, ratingBookId, rating);
+                        adminController.addBookRatings();
                         break;
                     case 49:
-                        adminServices.showTopRatedBooks();
+                        adminController.showTopRatedBooks();
                         break;
                     case 50:
-                        System.out.print("Enter date (yyyy-mm-dd): ");
-                        Date date = Date.valueOf(scanner.next());
-                        adminServices.trackDailyTransactions(date);
+                        adminController.trackDailyTransactions();
                         break;
                     case 51:
-                        System.out.print("Enter Member ID: ");
-                        int updateMemberId = scanner.nextInt();
-                        System.out.print("Enter New Name: ");
-                        scanner.nextLine(); // Consume newline
-                        String newName = scanner.nextLine();
-                        System.out.print("Enter New Contact: ");
-                        String newContact = scanner.nextLine();
-                        adminServices.updateMemberDetails(updateMemberId, newName);
+                        adminController.updateMemberDetails();
                         break;
                     case 52:
-                        System.out.print("Enter Genre: ");
-                        scanner.nextLine(); // Consume newline
-                        String genreBooks = scanner.nextLine();
-                        adminServices.viewIssuedBooksByGenre(genreBooks);
+                        adminController.viewIssuedBooksByGenre();
                         break;
                     case 53:
                         System.out.print("Enter Member ID: ");

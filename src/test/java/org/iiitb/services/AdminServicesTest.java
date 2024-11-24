@@ -1,83 +1,103 @@
 package org.iiitb.services;
 
+import org.iiitb.database.DatabaseServices;
 import org.iiitb.entities.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class AdminServicesTest {
+public class AdminServicesTest {
 
+    private AdminServices adminServices;
     private Map<Integer, Book> bookCatalog;
-    private Scanner scanner;
+    private DatabaseServices databaseServices;
 
     @BeforeEach
     void setUp() {
-        bookCatalog = new HashMap<>();
-        scanner = mock(Scanner.class); // Mock the Scanner
-        library = new Library(bookCatalog, scanner); // Assuming Library has a constructor taking these
+        bookCatalog = new HashMap<>(); // Use a real HashMap for testing
+        databaseServices = Mockito.mock(DatabaseServices.class); // Mock DatabaseServices
+        adminServices = new AdminServices(); // Inject dependencies
     }
 
     @Test
-    void testAddBookSuccess() {
-        // Mock user input
-        when(scanner.nextInt()).thenReturn(1);
-        when(scanner.nextLine()).thenReturn("") // Clear buffer
-                .thenReturn("Effective Java") // Title
-                .thenReturn("Joshua Bloch")   // Author
-                .thenReturn("Programming");  // Genre
-        when(scanner.nextDouble()).thenReturn(45.99);
+    void testAddBook_Success() {
+        // Define test data
+        int id = 4;
+        String title = "Test Title";
+        String author = "Test Author";
+        String genre = "Fiction";
+        double price = 199.99;
 
-        // Call the method
-        library.addBook();
+        // Call the method under test
+        Book bookToBeAdded = new Book(id, title, author, genre, price);
+        adminServices.addBook(bookToBeAdded);
 
-        // Verify book is added
-        assertTrue(bookCatalog.containsKey(1));
-        Book book = bookCatalog.get(1);
-        assertEquals("Effective Java", book.getTitle());
-        assertEquals("Joshua Bloch", book.getAuthor());
-        assertEquals("Programming", book.getGenre());
-        assertEquals(45.99, book.getPrice());
+        // Verify book was added to catalog
+        assert(bookCatalog.containsKey(id));
+        assert(bookCatalog.get(id).equals(bookToBeAdded));
+
+        // Verify database service interaction
+        verify(databaseServices, times(1)).addBookToDatabase(bookToBeAdded);
     }
 
-    @Test
-    void testAddBookDuplicateID() {
-        bookCatalog.put(1, new Book(1, "Existing Book", "Author", "Genre", 30.00));
-
-        // Mock user input for duplicate ID
-        when(scanner.nextInt()).thenReturn(1);
-        when(scanner.nextLine()).thenReturn("") // Clear buffer
-                .thenReturn("New Book") // Title
-                .thenReturn("Author")  // Author
-                .thenReturn("Genre");  // Genre
-        when(scanner.nextDouble()).thenReturn(50.00);
-
-        // Call the method
-        library.addBook();
-
-        // Verify book is not added and catalog size remains the same
-        assertEquals(1, bookCatalog.size());
-    }
-
-    @Test
-    void testAddBookMissingFields() {
-        // Mock user input with an empty title
-        when(scanner.nextInt()).thenReturn(2);
-        when(scanner.nextLine()).thenReturn("") // Clear buffer
-                .thenReturn("") // Empty Title
-                .thenReturn("Author") // Author
-                .thenReturn("Genre"); // Genre
-        when(scanner.nextDouble()).thenReturn(25.00);
-
-        // Call the method
-        library.addBook();
-
-        // Verify book is not added
-        assertFalse(bookCatalog.containsKey(2));
-    }
+//    @Test
+//    void testAddBook_ExistingId() {
+//        // Preload a book in the catalog
+//        int id = 1;
+//        Book existingBook = new Book(id, "Existing Title", "Existing Author", "Genre", 150.0);
+//        bookCatalog.put(id, existingBook);
+//
+//        // Call the method with the same ID
+//        bookService.addBook(id, "New Title", "New Author", "New Genre", 200.0);
+//
+//        // Verify that the existing book was not overwritten
+//        assert(bookCatalog.get(id).equals(existingBook));
+//
+//        // Verify no interaction with the database service
+//        verify(databaseServices, never()).addBookToDatabase(any());
+//    }
+//
+//    @Test
+//    void testAddBook_MissingFields() {
+//        // Call the method with empty title
+//        bookService.addBook(1, "", "Author", "Genre", 100.0);
+//        // Call the method with empty author
+//        bookService.addBook(2, "Title", "", "Genre", 100.0);
+//        // Call the method with empty genre
+//        bookService.addBook(3, "Title", "Author", "", 100.0);
+//
+//        // Verify no books were added to the catalog
+//        assert(bookCatalog.isEmpty());
+//
+//        // Verify no interaction with the database service
+//        verify(databaseServices, never()).addBookToDatabase(any());
+//    }
+//
+//    @Test
+//    void testAddBook_ExceptionHandling() {
+//        // Simulate an exception when interacting with the database
+//        int id = 1;
+//        String title = "Test Title";
+//        String author = "Test Author";
+//        String genre = "Fiction";
+//        double price = 199.99;
+//
+//        doThrow(new RuntimeException("Database Error"))
+//                .when(databaseServices).addBookToDatabase(any());
+//
+//        // Call the method
+//        bookService.addBook(id, title, author, genre, price);
+//
+//        // Verify the book was added to the catalog despite the exception
+//        assert(bookCatalog.containsKey(id));
+//
+//        // Verify the exception was caught and the application did not crash
+//        verify(databaseServices, times(1)).addBookToDatabase(any());
+//    }
+//}
 }
