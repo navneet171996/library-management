@@ -1,6 +1,5 @@
 package org.iiitb.menu;
 
-import org.iiitb.controller.MemberController;
 import org.iiitb.entities.Member;
 import org.iiitb.services.MemberServices;
 
@@ -12,7 +11,7 @@ public class MemberMenu {
 
     Scanner scanner = new Scanner(System.in);
     Map<Integer, Member> members = new HashMap<>();
-    MemberController memberController = new MemberController();
+    MemberServices memberServices = new MemberServices();
 
     public void viewMemberMenu(){
         try {
@@ -40,11 +39,11 @@ public class MemberMenu {
                 int choice = scanner.nextInt();
 
                 if (choice == 1) {
-                    memberController.searchBooks();
+                    memberServices.searchBooks();
                 } else if (choice == 2) {
-                    memberController.issueBook(member);
+                    memberServices.issueBook(member);
                 } else if (choice == 3) {
-                    memberController.returnBook(member);
+                    memberServices.returnBook(member);
                 } else if (choice == 4) {
                     break;
                 } else {

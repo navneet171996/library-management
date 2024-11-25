@@ -10,7 +10,7 @@ public class DatabaseServices {
 
     private String url = "jdbc:mysql://localhost:3306/libraryManagement";
     private String username = "root";
-    private String password = "Priyam123";
+    private String password = "Sam@9461027404";
 
     public void addBookToDatabase(Book book){
 

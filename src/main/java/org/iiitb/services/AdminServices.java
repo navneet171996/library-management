@@ -421,7 +421,7 @@ public class AdminServices {
             System.out.println("Genre: " + entry.getKey() + ", Issued Count: " + entry.getValue());
         }
     }
-
+    //du231[Def(members)-13 use(members)-495] du232[Def(member)-495 use(member)-496,498] du233[Def(bookTitle)-496 use(bookTitle)-498]
     public void trackOverdueBooks() {
         System.out.println("Overdue Books:");
         for (Member member : members.values()) {
@@ -431,7 +431,7 @@ public class AdminServices {
             }
         }
     }
-
+   //du235[Def(genreBooks)-505, use(genreBooks)-507,508,509] du236[Def(bookCatalog)-505 use(bookCatalog)-509] du237[Def(book)-506 use(book)-507,508,512] du238[Def(entry)-509 use(entry)-510, 511]
     public void viewGenreBasedBooks() {
         Map<String, List<Book>> genreBooks = new HashMap<>();
         for (Book book : bookCatalog.values()) {
