@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+
+:Input Member (member) and Book ID (id);
+:Check if bookCatalog.containsKey(id);
+
+if (bookCatalog.containsKey(id)) then (yes)
+    :Retrieve book from bookCatalog using id;
+    if (book.getIsIssued()) then (yes)
+        :Print "Error: Book is already issued.";
+    else (no)
+        if (member.getIssuedBooks().contains(book.getTitle())) then (yes)
+            :Print "Error: You have already issued this book.";
+        else (no)
+            if (member.getIssuedBooks().size() >= 3) then (yes)
+                :Print "Error: You cannot issue more than 3 books at a time.";
+            else (no)
+                :Set book.isIssued to true;
+                :Add book.getTitle() to member.getIssuedBooks();
+                :Print "Book issued successfully!";
+            endif
+        endif
+    endif
+else (no)
+    :Print "Error: Book not found.";
+endif
+
+stop
+
+@enduml

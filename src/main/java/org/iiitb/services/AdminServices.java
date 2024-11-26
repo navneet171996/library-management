@@ -246,7 +246,6 @@ public class AdminServices {
             System.out.println("Genre: " + entry.getKey() + ", Issued Count: " + entry.getValue());
         }
     }
-
     public void findInactiveMembers() {
         System.out.println("Inactive Members:");
         List<Member> allMembersFromDatabase = databaseServices.getAllMembersFromDatabase();
