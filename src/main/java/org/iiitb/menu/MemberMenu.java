@@ -24,7 +24,7 @@ public class MemberMenu {
                 scanner.nextLine(); // consume newline
                 System.out.print("Enter Member Name: ");
                 String memberName = scanner.nextLine();
-                members.put(memberId, new Member(memberId, memberName));
+                members.put(memberId, new Member(memberId, memberName, true));
                 System.out.println("Member registered successfully!");
             }
 

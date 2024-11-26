@@ -15,22 +15,25 @@ public class Book {
     private String genre;
     private Boolean isIssued;
     private Double price;
+    private Boolean status;
 
-    public Book(Integer id, String title, String author, String genre, Double price) {
+    public Book(Integer id, String title, String author, String genre, Double price, Boolean status) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.isIssued = false;
         this.price = price;
+        this.status = status;
     }
 
-    public Book(Integer id, String title, String author, String genre, Boolean isIssued, Double price) {
+    public Book(Integer id, String title, String author, String genre, Boolean isIssued, Double price, Boolean status) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.isIssued = isIssued;
         this.price = price;
+        this.status = status;
     }
 }

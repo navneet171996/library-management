@@ -32,6 +32,8 @@ public class AdminController {
         System.out.print("Enter Price: ");
         book.setPrice(scanner.nextDouble());
 
+        book.setStatus(true);
+
         adminServices.addBook(book);
     }
 
@@ -62,10 +64,6 @@ public class AdminController {
         adminServices.calculateMostPopularBook();
     }
 
-    public void calculateTotalFines(){
-        adminServices.calculateTotalFines();
-    }
-
     public void getBookDetailsById(){
         System.out.print("Enter Book ID: ");
         int bookId = scanner.nextInt();
@@ -92,18 +90,6 @@ public class AdminController {
         System.out.println("Book availability: " + (available ? "Available" : "Issued"));
     }
 
-    public void extendBookReturnDate(){
-        System.out.print("Enter Book ID: ");
-        int bookId = scanner.nextInt();
-        System.out.print("Enter Member ID: ");
-        int memberId = scanner.nextInt();
-        if(adminServices.extendBookReturnDate(bookId, memberId)){
-            System.out.println("Return date extended");
-        }else{
-            System.out.println("Return date cannot be extended");
-        }
-    }
-
     public void calculateTotalBooksIssuedByGenre(){
         System.out.print("Enter Genre: ");
         String genre = scanner.nextLine();
@@ -127,60 +113,12 @@ public class AdminController {
         adminServices.findBooksByAuthor(author);
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
     public void calculateGenrePopularity(){
         adminServices.calculateGenrePopularity();
     }
 
-    public void trackOverdueBooks(){
-        adminServices.trackOverdueBooks();
-    }
-
-    public void viewGenreBasedBooks(){
-        adminServices.viewGenreBasedBooks();
-    }
-
-    public void calculateAverageBorrowTime(){
-        adminServices.calculateAverageBorrowTime();
-    }
-
-    public void suggestBooksToRestock(){
-        adminServices.suggestBooksToRestock();
-    }
-
     public void findInactiveMembers(){
         adminServices.findInactiveMembers();
-    }
-
-    public void viewBookIssueHistory(){
-        System.out.print("Enter Book ID: ");
-        int bookHistoryId = scanner.nextInt();
-        adminServices.viewBookIssueHistory(bookHistoryId);
-    }
-
-    public void predictBookDemand(){
-        adminServices.predictBookDemand();
-    }
-
-    public void addBookRatings(){
-        System.out.print("Enter Member ID: ");
-        int ratingMemberId = scanner.nextInt();
-        System.out.print("Enter Book ID: ");
-        int ratingBookId = scanner.nextInt();
-        System.out.print("Enter Rating (1-5): ");
-        int rating = scanner.nextInt();
-        adminServices.addBookRatings(ratingMemberId, ratingBookId, rating);
-    }
-
-    public void showTopRatedBooks(){
-        adminServices.showTopRatedBooks();
-    }
-
-    public void trackDailyTransactions(){
-        System.out.print("Enter date (yyyy-mm-dd): ");
-        Date date = Date.valueOf(scanner.next());
-        adminServices.trackDailyTransactions(date);
     }
 
     public void updateMemberDetails(){
@@ -191,33 +129,6 @@ public class AdminController {
         String newName = scanner.nextLine();
         adminServices.updateMemberDetails(updateMemberId, newName);
 
-    }
-
-    public void viewIssuedBooksByGenre(){
-        System.out.print("Enter Genre: ");
-        scanner.nextLine();
-        String genreBooks = scanner.nextLine();
-        adminServices.viewIssuedBooksByGenre(genreBooks);
-    }
-
-    public void simulateLibraryDay(){
-        adminServices.simulateLibraryDay();
-    }
-
-    public void generateDetailedGenreReport(){
-        adminServices.generateDetailedGenreReport();
-    }
-
-    public void trackInactiveBooks(){
-        adminServices.trackInactiveBooks();
-    }
-
-    public void viewTopGenres(){
-        adminServices.viewTopGenres();
-    }
-
-    public void listMembersWithMultipleOverdueBooks(){
-        adminServices.listMembersWithMultipleOverdueBooks();
     }
 
     public void categorizeBooksByGenre(){

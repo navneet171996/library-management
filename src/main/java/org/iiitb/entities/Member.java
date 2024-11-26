@@ -14,9 +14,10 @@ import java.util.List;
 public class Member {
     private Integer id;
     private String name;
-    private List<String> issuedBooks;
+    private List<Book> issuedBooks;
+    private Boolean status;
 
-    public Member(int id, String name) {
+    public Member(Integer id, String name, Boolean status) {
         this.id = id;
         this.name = name;
         this.issuedBooks = new ArrayList<>();
